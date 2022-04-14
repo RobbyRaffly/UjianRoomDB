@@ -68,7 +68,7 @@ class UpdateUser : AppCompatActivity() {
         }
 
 
-        btnSend.setOnClickListener({
+        btnUpdate.setOnClickListener({
             val userdata = UserModel(
                 idussr.toLong(),updateName.text.toString(), genderInput,
                 updateUmur.text.toString(),StatusInput)
