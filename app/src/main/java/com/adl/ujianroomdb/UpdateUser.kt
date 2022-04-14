@@ -4,10 +4,12 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import com.adl.adlroomdb.adapter.idussr
 import com.adl.adlroomdb.database.UserDatabase
 import com.adl.adlroomdb.database.model.UserModel
 import kotlinx.android.synthetic.main.activity_form_input.*
@@ -21,7 +23,6 @@ import kotlinx.android.synthetic.main.activity_update_user.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-var idussr:Int=0
 class UpdateUser : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,13 +70,16 @@ class UpdateUser : AppCompatActivity() {
 
 
         btnUpdate.setOnClickListener({
+
             val userdata = UserModel(
                 idussr.toLong(),updateName.text.toString(), genderInput,
                 updateUmur.text.toString(),StatusInput)
 
+            Log.d("Data", userdata.toString())
+
 
             GlobalScope.launch {
-                UserDatabase.getInstance(this@UpdateUser).userDao().updateUser(idussr.toLong(),updateName.text.toString(),genderInput,updateUmur.toString(), StatusInput)
+                UserDatabase.getInstance(this@UpdateUser).userDao().updateUser(idussr.toLong(),updateName.text.toString(),genderInput,updateUmur.text.toString(), StatusInput)
                 //UserDatabase.getInstance(this@UpdateUser).userDao().updateUser(userdata)
                 val intent = Intent()
                 intent.putExtra("data",userdata)

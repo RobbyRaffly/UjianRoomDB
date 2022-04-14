@@ -10,7 +10,12 @@ import com.adl.ujianroomdb.R
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class UserAdapter(val data :ArrayList<UserModel>) : RecyclerView.Adapter<UserViewHolder>() {
+class UserAdapter(val data :ArrayList<UserModel>, val mItemClickListener:ItemClickListener) : RecyclerView.Adapter<UserViewHolder>() {
+    interface ItemClickListener{
+        fun onItemClick(user:UserModel)
+    }
+
+
     lateinit var parent: ViewGroup
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
@@ -23,7 +28,7 @@ class UserAdapter(val data :ArrayList<UserModel>) : RecyclerView.Adapter<UserVie
     }
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
-      holder.bindData(this@UserAdapter,position)
+      holder.bindData(this@UserAdapter,position, mItemClickListener)
     }
 
     override fun getItemCount(): Int {
@@ -50,17 +55,23 @@ class UserAdapter(val data :ArrayList<UserModel>) : RecyclerView.Adapter<UserVie
 
     }
 
-//    fun UpdateDataAt(position: Int){
-//        val updateusr = UserDatabase.getInstance(parent.context).userDao()
-//            .updateUser(data.get(position))
-//        data.clear()
-//        data.addAll( ArrayList(UserDatabase.getInstance(parent.context).userDao().getAll()))
-//        val mainExecutor = ContextCompat.getMainExecutor(parent.context)
-//
-//        // Execute a task in the main thread
-//        mainExecutor.execute {
-//            // You code logic goes here.
-//            notifyDataSetChanged()
-//        }
-//    }
+    fun ambilIdAt(position: Int){
+        //val Idnya = UserDatabase.getInstance(parent.context).userDao().getIdUser()
+        data.clear()
+        data.addAll( ArrayList(UserDatabase.getInstance(parent.context).userDao().getAll()))
+        val mainExecutor = ContextCompat.getMainExecutor(parent.context)
+
+        // Execute a task in the main thread
+        mainExecutor.execute {
+            // You code logic goes here.
+            notifyDataSetChanged()
+        }
+
+
+    }
+
+
+
+
+
 }

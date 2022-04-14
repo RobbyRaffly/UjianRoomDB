@@ -4,9 +4,11 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.adl.adlroomdb.adapter.UserAdapter
+import com.adl.adlroomdb.adapter.idussr
 import com.adl.adlroomdb.database.UserDatabase
 import com.adl.adlroomdb.database.model.UserModel
 import kotlinx.android.synthetic.main.activity_main.*
@@ -15,8 +17,10 @@ import kotlinx.coroutines.launch
 
 
 var jmlUsr:Int=0
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(),UserAdapter.ItemClickListener{
     lateinit var useradapter: UserAdapter
+
+
     var lstUser = ArrayList<UserModel>()
     var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
             result ->
@@ -26,11 +30,13 @@ class MainActivity : AppCompatActivity() {
 //                lstUser.add(result.data!!.extras?.getParcelable<UserModel>("data")!!)
 //            }
             GlobalScope.launch {
+                jmlUsr = getJumlahUser()
 
                 lstUser.clear()
                 lstUser.addAll(ArrayList(getAllData()))
 
                 this@MainActivity.runOnUiThread({
+                    txtCountUser.setText("${jmlUsr.toString()} User")
                     useradapter.notifyDataSetChanged()
                 })
 
@@ -52,7 +58,7 @@ class MainActivity : AppCompatActivity() {
             this@MainActivity.runOnUiThread({
 
                 txtCountUser.setText("${jmlUsr.toString()} User")
-                useradapter = UserAdapter(lstUser)
+                useradapter = UserAdapter(lstUser, this@MainActivity)
                 lstItemUser.apply {
                     layoutManager = LinearLayoutManager(this@MainActivity)
                     adapter = useradapter
@@ -78,5 +84,13 @@ class MainActivity : AppCompatActivity() {
 
     fun getJumlahUser():Int {
         return UserDatabase.getInstance(this@MainActivity).userDao().getCount()
+    }
+
+    override fun onItemClick(userModel: UserModel) {
+        Toast.makeText(this@MainActivity,"posisi = ${userModel.id}",Toast.LENGTH_LONG).show()
+        idussr =userModel.id.toInt()
+        val intent = Intent( this@MainActivity, UpdateUser::class.java)
+        resultLauncher.launch(intent)
+        //.startActivity(intent)
     }
 }

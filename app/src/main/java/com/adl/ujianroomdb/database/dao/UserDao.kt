@@ -18,6 +18,9 @@ interface UserDao {
     fun updateUser(idusr:Long, unam:String, gnd:String, umr:String, stts:String)
 //    @Update
 //    fun updateUser(user:UserModel):Int
+//
+//    @Query("Select id from UserModel")
+//    fun getIdUser(user:UserModel)
 
     @Query("SELECT * FROM UserModel")
     fun getAll(): List<UserModel>
